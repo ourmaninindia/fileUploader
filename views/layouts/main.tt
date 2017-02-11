@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <!--[if IE]>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <![endif]-->
+        <meta charset="utf-8">
+        <title>jQuery File Upload Demo</title>
+        <meta name="description" content="File Uploader">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="[% css_url %]/bootstrap.min.css">
+        <link rel="stylesheet" href="[% css_url %]/style.css">
+        <link rel="stylesheet" href="[% css_url %]/blueimp-gallery.min.css">
+        <link rel="stylesheet" href="[% css_url %]/jquery.fileupload.css">
+        <link rel="stylesheet" href="[% css_url %]/jquery.fileupload-ui.css">
+        <noscript><link rel="stylesheet" href="[% css_url %]/jquery.fileupload-noscript.css"></noscript>
+        <noscript><link rel="stylesheet" href="[% css_url %]/jquery.fileupload-ui-noscript.css"></noscript>
+    </head>
+    <body>
+        [% content %]
+        <script src="[% js_url %]/jquery-3.1.1.min.js"></script>
+        <script src="[% js_url %]/jquery-ui.min.js"></script>
+        <script src="[% js_url %]/tmpl.min.js"></script>
+        <script src="[% js_url %]/load-image.all.min.js"></script>
+        <script src="[% js_url %]/canvas-to-blob.min.js"></script>
+        <script src="[% js_url %]/bootstrap.min.js"></script>
+        <script src="[% js_url %]/jquery.blueimp-gallery.min.js"></script>
+        <script src="[% js_url %]/jquery.iframe-transport.js"></script>
+        <script src="[% js_url %]/jquery.fileupload.js"></script>
+        <script src="[% js_url %]/jquery.fileupload-process.js"></script>
+        <script src="[% js_url %]/jquery.fileupload-image.js"></script>
+        <script src="[% js_url %]/jquery.fileupload-audio.js"></script>
+        <script src="[% js_url %]/jquery.fileupload-video.js"></script>
+        <script src="[% js_url %]/jquery.fileupload-validate.js"></script>
+        <script src="[% js_url %]/jquery.fileupload-ui.js"></script>
+        <script src="[% js_url %]/main.js"></script>
+    </body>
+</html>
