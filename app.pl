@@ -1,12 +1,11 @@
 #!/usr/bin/env perl
 
-use Dancer2;
-use DBI;
-use File::Spec;
-use Template;
-
 use strict;
 use warnings;
+
+use Dancer2;
+use DBI;
+use Template;
 
 set 'session'      => 'Simple';
 set 'template'     => 'template_toolkit';
@@ -32,6 +31,9 @@ get '/' => sub {
 
 any '/upload' => sub {
 
+    return encode_json({
+        success => 1,
+    });
 };
 
 start;
