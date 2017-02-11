@@ -6,6 +6,7 @@ use warnings;
 use Dancer2;
 use DBI;
 use Template;
+use Data::Printer;
 
 set 'session'      => 'Simple';
 set 'template'     => 'template_toolkit';
@@ -30,6 +31,12 @@ get '/' => sub {
 };
 
 any '/upload' => sub {
+
+    my @uploads = request->uploads('files[]');
+
+    for my $upload ( @uploads) {
+        debug "Upload Object: " . np(@uploads);
+    }
 
     return encode_json({
         success => 1,
