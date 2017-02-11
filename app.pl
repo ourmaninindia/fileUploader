@@ -30,7 +30,8 @@ get '/' => sub {
     template 'index.tt';
 };
 
-post '/upload' => sub {
+any '/upload' => sub {
+
 };
 
 start;
