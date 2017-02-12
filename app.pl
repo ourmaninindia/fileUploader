@@ -6,7 +6,7 @@ use warnings;
 use Dancer2;
 use DBI;
 use Template;
-use Data::Printer;
+use Data::Dumper;
 
 set 'session'      => 'Simple';
 set 'template'     => 'template_toolkit';
@@ -32,12 +32,13 @@ get '/' => sub {
 
 any '/upload' => sub {
 
-    my @uploads = request->uploads('files[]');
+    my $uploads = request->uploads('files[]');
+    for my $file ( @{ $uploads->{'files[]'} } ) {
 
-    for my $upload ( @uploads) {
-        debug "Upload Object: " . np(@uploads);
+        printf "Basname: %s\n", $file->basename;
     }
 
+    # make your json response here
     return encode_json({
         success => 1,
     });
