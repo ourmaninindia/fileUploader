@@ -32,16 +32,47 @@ get '/' => sub {
 
 any '/upload' => sub {
 
-    my $uploads = request->uploads('files[]');
+    my $uploads         = request->uploads('files[]');
+    my $directory       = 'public/uploads';
+    my $path            = path( config->{appdir}, $directory );
+    my $thumbnail_path  = path( $path, 'thumb');
+    my @array;
+    my $json;
+
+    mkdir $path if not -e $path;
+    mkdir $thumbnail_path if not -e $thumbnail_path;
+
     for my $file ( @{ $uploads->{'files[]'} } ) {
 
-        printf "Basname: %s\n", $file->basename;
+        my $path = path($path,$file->basename);
+      
+        if (-e $path) {
+            $json = {
+                name  => $file->basename,
+                size  => $file->size,
+                error => " File already exists in $directory"
+            };
+        } 
+        else {
+            $json = {
+                name            => $file->basename,
+                size            => $file->size,
+                url             => $file->filename,
+                thumbnailUrl    => '',#$file->thumbnail_url,
+                deleteUrl       => $file->filename,
+                deleteType      => "DELETE"
+            };
+            $file->copy_to($path);
+        };
+        push( @array, $json );
     }
-
+    
     # make your json response here
-    return encode_json({
-        success => 1,
-    });
+    my %json_array;
+    $json_array{'files'} = \@array;
+
+       debug to_dumper(\%json_array);
+    return encode_json(\%json_array);
 };
 
 start;
