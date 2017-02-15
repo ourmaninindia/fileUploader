@@ -6,8 +6,10 @@ use warnings;
 use Dancer2;
 use DBI;
 use Template;
-use Data::Dumper;
-#use Image::Magick::Thumbnail 0.06;
+use Imager;
+# installation instructions:
+# cpanm Imager Imager::File::JPEG
+# sudo yum install libjpeg-devel (libjpeg-dev on Ubuntu)
 
 set 'session'      => 'Simple';
 set 'template'     => 'template_toolkit';
@@ -33,39 +35,7 @@ hook before_template_render => sub {
 
 get '/' => sub {
 
-    my ($json, @array, $error);
-
-    if ( opendir( DIR, $root.$image_path ) ) {
-    
-        while ( my $file = readdir(DIR) ) {
-            next if ( $file =~ m/^\./ );
-            next if ( $file =~ m/thumb/); 
-
-            $json = {
-                name            => $file,
-                size            => 0, #$file->size,
-                url             => $image_path.$file,
-                thumbnailUrl    => path($thumb_path, $file),
-                deleteUrl       => $file,
-                deleteType      => "DELETE"
-            };
-            
-            push( @array, $json );   
-        };
-        closedir(DIR);
-    }
-    else {
-        my $error = "The directory $image_path is not on file";
-    };
-
-    return template 'index.tt' => {
-        error => $error,
-        file  => \@array,
-    };
-
-    my %response;
-    $response{'files'} = \@array;
-    return encode_json(\%response);
+    template 'index.tt';
 };
 
 del '/:deletes' => sub {
@@ -81,7 +51,38 @@ del '/:deletes' => sub {
     return encode_json(\%response);
 };
 
-any '/upload' => sub {
+get '/upload' => sub {
+    my ($json, @array, $error);
+
+    if ( opendir( DIR, $root.$image_path ) ) {
+    
+        while ( my $file = readdir(DIR) ) {
+            next if ( $file =~ m/^\./ );
+            next if ( $file =~ m/thumb/); 
+
+            $json = {
+                name            => $file,
+                size            => (-s $file),
+                url             => $image_path.$file,
+                thumbnailUrl    => path($thumb_path, $file),
+                deleteUrl       => $file,
+                deleteType      => "DELETE"
+            };
+            
+            push( @array, $json );   
+        };
+        closedir(DIR);
+    }
+    else {
+        return template 'index.tt' => { $error => "The directory $image_path is not on file" };
+    };
+
+    my %response;
+    $response{'files'} = \@array;
+    return encode_json(\%response);
+};
+
+post '/upload' => sub {
 
     my $uploads = request->uploads('files[]');
     my @array;
@@ -90,6 +91,9 @@ any '/upload' => sub {
     mkdir path( $root,$image_path) if not -e path( $root,$image_path);
     mkdir path( $root,$thumb_path) if not -e path( $root,$thumb_path);
 
+#use Data::Dumper;
+#Route exception: Not an ARRAY reference at /home/alfred/webapps/fileUploader/app.pl line 97.
+# $uploads = [ $uploads ] if ref(@{ $uploads->{'files[]'} }) ne 'ARRAY';
     for my $file ( @{ $uploads->{'files[]'} } ) {
 
         my $path = path($root.$image_path, $file->basename);
@@ -110,14 +114,16 @@ any '/upload' => sub {
                 deleteUrl       => $file->filename,
                 deleteType      => "DELETE"
             };
+
             $file->copy_to($path);
 
-            # create thumbnail where the biggest side is 80px
-            #my $src = Image::Magick->new;
-            #   $src->Read($path);
-            #my ($thumb, $x, $y) = Image::Magick::Thumbnail::create($src, 80);
-            #$path( $Thumbnail_path, $thumb );
-            #$thumb->Write($path);
+            # generate the thumbbnail
+            my $img = Imager->new;
+            $img->read(file=> $root.$image_path.'/'.$file->basename) 
+                or die 'Cannot load '.$image_path.'/'.$file->basename.': ', $img->errstr;
+            my $thumbnail = $img->scale(xpixels=>80,ypixels=>80);
+            $thumbnail->write(file=>$root.$thumb_path.'/'.$file->basename) 
+                or die 'Cannot save thumbnail file '.$file->basename,$img->errstr;
         };
         push( @array, $json );
     }
