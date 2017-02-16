@@ -22,15 +22,15 @@ set 'layout'       => 'main';
 
 our $image_path = 'uploads';
 our $thumb_path = 'uploads/thumb';
-our $root       =  config->{appdir}.'/public/';
+our $root       = '/home/alfred/webapps/media.summertimegoa/public/';
 
 hook before_template_render => sub {
 
     my $tokens = shift;
 
-    $tokens->{css_url} = request->base . 'css/';
-    $tokens->{js_url}  = request->base . 'js/';
-    $tokens->{img_url} = request->base . 'img/';
+    $tokens->{css_url} = 'http://media.summertimegoa.com/'. 'css';
+    $tokens->{js_url}  = 'http://media.summertimegoa.com/'. 'js';
+    $tokens->{img_url} = 'http://media.summertimegoa.com/'. 'img';
 };
 
 get '/' => sub {
@@ -74,7 +74,7 @@ get '/upload' => sub {
         closedir(DIR);
     }
     else {
-        return template 'index.tt' => { $error => "The directory $image_path is not on file" };
+        return template 'index.tt' => { error => "The directory $image_path is not on file" };
     };
 
     my %response;
