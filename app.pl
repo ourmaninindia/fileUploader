@@ -7,6 +7,8 @@ use Dancer2;
 use DBI;
 use Template;
 use Imager;
+use Data::Dumper;
+
 # installation instructions:
 # cpanm Imager Imager::File::JPEG
 # sudo yum install libjpeg-devel (libjpeg-dev on Ubuntu)
@@ -19,6 +21,7 @@ set 'show_errors'  => 1;
 set 'startup_info' => 1;
 set 'warnings'     => 1;
 set 'layout'       => 'main';
+set 'behind_proxy' => 1;
 
 our $image_path = 'uploads';
 our $thumb_path = 'uploads/thumb';
@@ -28,9 +31,9 @@ hook before_template_render => sub {
 
     my $tokens = shift;
 
-    $tokens->{css_url} = 'http://media.summertimegoa.com/'. 'css';
-    $tokens->{js_url}  = 'http://media.summertimegoa.com/'. 'js';
-    $tokens->{img_url} = 'http://media.summertimegoa.com/'. 'img';
+    $tokens->{css_url} = request->base . 'css';
+    $tokens->{js_url}  = request->base . 'js' ;
+    $tokens->{img_url} = request->base . 'img';
 };
 
 get '/' => sub {
