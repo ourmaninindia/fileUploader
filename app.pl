@@ -126,7 +126,7 @@ post '/upload' => sub
                 deleteType      => "DELETE"
             };
 
-debug to_dumper("$website/$image_dir/$filename");
+debug to_dumper("curl https://api.tinify.com/shrink --user api:$api_key --data-binary \@$filename --dump-header /dev/stdout");
 
             $data->copy_to("$root/$image_dir/$filename");
 
