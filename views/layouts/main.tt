@@ -8,13 +8,13 @@
         <title>jQuery File Upload Demo</title>
         <meta name="description" content="File Uploader">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="[% css_url %]/bootstrap.min.css">
-        <link rel="stylesheet" href="[% css_url %]/style.css">
-        <link rel="stylesheet" href="[% css_url %]/blueimp-gallery.min.css">
-        <link rel="stylesheet" href="[% css_url %]/jquery.fileupload.css">
-        <link rel="stylesheet" href="[% css_url %]/jquery.fileupload-ui.css">
-        <noscript><link rel="stylesheet" href="[% css_url %]/jquery.fileupload-noscript.css"></noscript>
-        <noscript><link rel="stylesheet" href="[% css_url %]/jquery.fileupload-ui-noscript.css"></noscript>
+        <link rel="stylesheet" href="[% request.uri_base %]/[% css_url %]/bootstrap.min.css">
+        <link rel="stylesheet" href="[% request.uri_base %]/[% css_url %]/style.css">
+        <link rel="stylesheet" href="[% request.uri_base %]/[% css_url %]/blueimp-gallery.min.css">
+        <link rel="stylesheet" href="[% request.uri_base %]/[% css_url %]/jquery.fileupload.css">
+        <link rel="stylesheet" href="[% request.uri_base %]/[% css_url %]/jquery.fileupload-ui.css">
+        <noscript><link rel="stylesheet" href="[% request.uri_base %]/[% css_url %]/jquery.fileupload-noscript.css"></noscript>
+        <noscript><link rel="stylesheet" href="[% request.uri_base %]/[% css_url %]/jquery.fileupload-ui-noscript.css"></noscript>
     </head>
     <body>
         [% content %]

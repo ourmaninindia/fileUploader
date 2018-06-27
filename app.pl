@@ -28,7 +28,7 @@ hook before_template_render => sub
 {
     my $tokens = shift;
 
-    $tokens->{css_url} = request->base . 'css';
+    $tokens->{css_url} = 'css';
     $tokens->{js_url}  = request->base . 'js';
 };
 
