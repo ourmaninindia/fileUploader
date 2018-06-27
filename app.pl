@@ -28,8 +28,8 @@ hook before_template_render => sub
 {
     my $tokens = shift;
 
-    $tokens->{css_url} = 'css';
-    $tokens->{js_url}  = request->base . 'js';
+    $tokens->{css} = 'css';
+    $tokens->{js}  = 'js';
 };
 
 get '/' => sub {
@@ -65,8 +65,8 @@ get '/upload' => sub
             {
                 name            => $filename,
                 size            => (-s $filename),
-                url             => path("$image_dir", $filename),
-                thumbnailUrl    => path("image_dir/$thumb_dir", $filename),
+                url             => path("../$image_dir", $filename),
+                thumbnailUrl    => path("../$image_dir/$thumb_dir", $filename),
                 deleteUrl       => $filename,
                 deleteType      => "DELETE"
             };
@@ -120,8 +120,8 @@ post '/upload' => sub
             {
                 name            => $filename,
                 size            => $data->{size},
-                url             => "$image_dir/$filename",
-                thumbnailUrl    => path("$image_dir/$thumb_dir", $data->{filename}),
+                url             => "../$image_dir/$filename",
+                thumbnailUrl    => path("../$image_dir/$thumb_dir", $data->{filename}),
                 deleteUrl       => $data->{filename},
                 deleteType      => "DELETE"
             };
