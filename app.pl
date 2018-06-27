@@ -126,14 +126,17 @@ post '/upload' => sub
                 deleteType      => "DELETE"
             };
 
-debug to_dumper("curl https://api.tinify.com/shrink --user api:$api_key --data-binary \@$filename --dump-header /dev/stdout");
+debug to_dumper("$website/$image_dir/$filename");
 
             $data->copy_to("$root/$image_dir/$filename");
 
             if ($compression)
                 {
-                my $compressed = `curl https://api.tinify.com/shrink --user api:$api_key 
-                                --data-binary \@$filename --dump-header /dev/stdout`;
+                my $compressed = `curl https://api.tinify.com/shrink \
+                                         --user api:$api_key \
+                                         --header "Content-Type: application/json" \
+                                         --data '{"source": {"url": "$website/$image_dir/$filename"} }' \
+                                         --dump-header /dev/stdout`;
 
                 debug to_dumper($compressed);
         
