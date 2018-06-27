@@ -126,7 +126,7 @@ post '/upload' => sub
                 deleteType      => "DELETE"
             };
 
-debug to_dumper("$root/$image_dir/$filename");
+debug to_dumper("$website/$image_dir/$filename");
 
             $data->copy_to("$root/$image_dir/$filename");
 
