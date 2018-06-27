@@ -1,7 +1,8 @@
 # fileUploader
-A Perl backend for the jquery-fileUpload plugin
+A Perl version of the jQuery File Upload from https://blueimp.github.io/jQuery-File-Upload/
 
 Installation
+
 The program uses Dancer2 and template toolkit. Of course the script can be modified to do wiithout these two or exchange it for say Mojolicious.
 
 You need to install libjpeg-devel (yum) or libjpeg-dev (Ubuntu)
