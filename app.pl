@@ -21,7 +21,7 @@ our $api_key        = 'uKgMjIpeqXWPbVqdJXPFVdro4LUeXEvk';
 our $root           = config->{appdir}.'/public';
 our $image_dir      = 'uploads';
 our $thumb_dir      = 'thumb';
-our $website        = 'http://www.travellers-palm.com';
+our $website        = 'http://upload.travellers-palm.com';
 our $compression    = 1;
 
 hook before_template_render => sub 
