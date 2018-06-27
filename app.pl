@@ -121,10 +121,12 @@ post '/upload' => sub
                 name            => $filename,
                 size            => $data->{size},
                 url             => "../$image_dir/$filename",
-                thumbnailUrl    => path("../$image_dir/$thumb_dir", $data->{filename}),
-                deleteUrl       => $data->{filename},
+                thumbnailUrl    => path("../$image_dir/$thumb_dir", $filename),
+                deleteUrl       => $filename,
                 deleteType      => "DELETE"
             };
+
+debug to_dumper("$root/$image_dir/$filename");
 
             $data->copy_to("$root/$image_dir/$filename");
 
@@ -141,7 +143,7 @@ post '/upload' => sub
                     {
                         name  => $filename,
                         size  => $data->{size},
-                        error => "Issue compressing $website/$image_dir/$filename: $compressed"
+                        error => "Issue compressing: $compressed"
                     };
                 }
             }
