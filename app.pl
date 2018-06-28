@@ -21,6 +21,7 @@ our $api_key        = 'uKgMjIpeqXWPbVqdJXPFVdro4LUeXEvk';
 our $root           = config->{appdir}.'/public';
 our $image_dir      = 'uploads';
 our $thumb_dir      = 'thumb';
+our $download_dir   = 'downloads';
 our $website        = 'http://upload.travellers-palm.com';
 our $compression    = 1;
 
@@ -92,15 +93,19 @@ post '/upload' => sub
     my $json;
     my @uploads;
     
-    mkdir path( $image_dir) if not -e path(  $image_dir );
+    # verify presence of directories
+    mkdir path( $image_dir)             if not -e path(  $image_dir );
     mkdir path("$image_dir/$thumb_dir") if not -e path( "$image_dir/$thumb_dir");
+    mkdir path( $download_dir)          if not -e path(  $download_dir );
 
+    # if a single image push value into an array
     unless (_::is_array_ref $uploads->{'files[]'})
     {
         push(@uploads,$uploads->{'files[]'});
         $uploads->{'files[]'} = \@uploads;
     } 
-
+    
+    # optimizing images
     for my $data ( @{ $uploads->{'files[]'} } ) {
 
         my $filename = $data->{filename};
@@ -126,17 +131,22 @@ post '/upload' => sub
                 deleteType      => "DELETE"
             };
 
-debug to_dumper("$website/$image_dir/$filename");
+#debug to_dumper("$website/$image_dir/$filename");
 
             $data->copy_to("$root/$image_dir/$filename");
 
             if ($compression)
                 {
-                my $compressed = `curl https://api.tinify.com/shrink \
-                                         --user api:$api_key \
-                                         --header "Content-Type: application/json" \
-                                         --data '{"source": {"url": "$website/$image_dir/$filename"} }' \
-                                         --dump-header /dev/stdout`;
+                my $compressed = `curl https://api.tinify.com/shrink 
+                                    --user api:$api_key 
+                                    --header "Content-Type: application/json" 
+                                    --data-binary @"$filename" 
+                                    --dump-header /dev/stdout 
+                                    --silent | grep Location | awk '{print $2 }`;
+
+                #$compressed = ${$compressed// }
+                $compressed = `echo -n "$compressed" | sed s/.$//`;
+                curl $compressed -o "$download_dir/$filename" --silent
 
                 debug to_dumper($compressed);
         
@@ -150,7 +160,7 @@ debug to_dumper("$website/$image_dir/$filename");
                     };
                 }
             }
-            # generate the thumbbnail
+            # generate the thumbbnail(s)
             my $img = Imager->new;
                $img->read(file => "$root/$image_dir/$filename") 
                         or die "Cannot read $filename from file: ", $img->{errstr};
