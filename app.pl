@@ -137,19 +137,12 @@ post '/upload' => sub
 
             if ($compression)
                 {
-                my $compressed = `curl https://api.tinify.com/shrink 
-                                    --user api:$api_key 
-                                    --header "Content-Type: application/json" 
-                                    --data-binary @"$filename" 
-                                    --dump-header /dev/stdout 
-                                    --silent | grep Location | awk '{print $2 }`;
 
-                #$compressed = ${$compressed// }
-                $compressed = `echo -n "$compressed" | sed s/.$//`;
-                exec ("$compressed -o '$download_dir/$filename' --silent") or print STDERR "couldn't exec: $!";
-                debug to_dumper($compressed);
+                my $jso  = `curl -i --user api:$api_key --data-binary @"$image_dir/$filename" https://api.tinify.com/shrink`;
+                my $url  = `echo $jso | grep -o 'http[s]*:[^"]*'`;
+                my $ok   = `curl $url > "$image_dir/$filename" 2>/dev/null`;
         
-                if ( $compressed =~ m/error/ )
+                if ( $ok =~ m/error/ )
                 {
                     $json = 
                     {
