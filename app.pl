@@ -148,7 +148,7 @@ post '/upload' => sub
                     {
                         name  => $filename,
                         size  => $data->{size},
-                        error => "Issue compressing: $compressed"
+                        error => "Issue compressing: $ok"
                     };
                 }
             }
