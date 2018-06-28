@@ -146,9 +146,8 @@ post '/upload' => sub
 
                 #$compressed = ${$compressed// }
                 $compressed = `echo -n "$compressed" | sed s/.$//`;
-                curl $compressed -o "$download_dir/$filename" --silent
-
-                debug to_dumper($compressed);
+                exec ("$compressed -o '$download_dir/$filename' --silent") or die STDERR "couldn't exec foo: $!";
+                #debug to_dumper($compressed);
         
                 if ( $compressed =~ m/error/ )
                 {
