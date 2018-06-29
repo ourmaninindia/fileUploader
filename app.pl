@@ -140,11 +140,11 @@ post '/upload' => sub
                 if ($ok)
                 {
                     my @values  = split('\n', $result);
-                    my @text    = split(')',$values[6]);
+                    my @text    = split('\)',$values[6]);
                     {
                         name  => $filename,
                         size  => $data->{size},
-                        error => $text[1]
+                        error => $text[0].')'
                     }
                 }
                 else
