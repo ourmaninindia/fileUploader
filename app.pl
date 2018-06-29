@@ -131,26 +131,31 @@ post '/upload' => sub
                 deleteType      => "DELETE"
             };
 
-#debug to_dumper("$website/$image_dir/$filename");
-
             $data->copy_to("$root/$image_dir/$filename");
 
             if ($compression)
+            {
+                my $result  = `tinypng -k $api_key $image_dir/$filename ` ;
+                my $ok = ($result =~ /Found 1 image/)?1:0;
+                if ($ok)
                 {
-
-                my $jso  = `curl -i --user api:$api_key --data-binary @"$image_dir/$filename" https://api.tinify.com/shrink`;
-                my $url  = `echo $jso | grep -o 'http[s]*:[^"]*'`;
-                my $ok   = `curl $url > "$image_dir/$filename" 2>/dev/null`;
-        
-                if ( $ok =~ m/error/ )
+                    my @values  = split('\n', $result);
+                    my @text    = split(')',$values[6]);
+                    {
+                        name  => $filename,
+                        size  => $data->{size},
+                        error => $text[1]
+                    }
+                }
+                else
                 {
                     $json = 
                     {
                         name  => $filename,
                         size  => $data->{size},
-                        error => "Issue compressing: $ok"
-                    };
-                }
+                        error => 'Unable to compress'
+                    }
+                }   
             }
             # generate the thumbbnail(s)
             my $img = Imager->new;
